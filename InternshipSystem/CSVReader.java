@@ -33,5 +33,31 @@ public class CSVReader {
             System.out.println("Error writing to file: " + filename);
         }
     }
+
+    public static void updateCompanyRepCSV(String filename, CompanyRep[] reps, int repCount) {
+        try {
+            FileWriter fw = new FileWriter(filename, false);
+            // Write header
+            fw.write("CompanyRepID,Name,CompanyName,Department,Position,Email,Status\n");
+            // Write all company representatives
+            for (int i = 0; i < repCount; i++) {
+                if (reps[i] != null) {
+                    String status = reps[i].isApproved() ? "Approved" : "Pending";
+                    String line = reps[i].getId() + "," +
+                                  reps[i].getName() + "," +
+                                  reps[i].getCompanyName() + "," +
+                                  reps[i].getDepartment() + "," +
+                                  reps[i].getPosition() + "," +
+                                  reps[i].getEmail() + "," +
+                                  status;
+                    fw.write(line + "\n");
+                }
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error updating file: " + filename);
+        }
+    }
 }
+
 

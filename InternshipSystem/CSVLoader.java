@@ -55,4 +55,40 @@ public class CSVLoader {
     public static int getStaffCount() {
         return staffCount;
     }
+
+    private static int companyRepCount = 0;
+
+    public static CompanyRep[] loadCompanyReps() {
+        String[][] data = CSVReader.readCSV("sample_company_representative_list.csv", 50, 10);
+        CompanyRep[] reps = new CompanyRep[50];
+        companyRepCount = 0;
+        
+        for (int i = 0; i < data.length && data[i][0] != null; i++) {
+            // Skip header row
+            if (i == 0 && data[i][0].equals("CompanyRepID")) {
+                continue;
+            }
+            
+            // CSV format: CompanyRepID,Name,CompanyName,Department,Position,Email,Status
+            String id = data[i][0];
+            String name = data[i][1];
+            String companyName = data[i].length > 2 && data[i][2] != null ? data[i][2] : "";
+            String department = data[i].length > 3 && data[i][3] != null ? data[i][3] : "";
+            String position = data[i].length > 4 && data[i][4] != null ? data[i][4] : "";
+            String email = data[i].length > 5 && data[i][5] != null ? data[i][5] : "";
+            String status = data[i].length > 6 && data[i][6] != null ? data[i][6] : "Pending";
+            
+            CompanyRep rep = new CompanyRep(id, name, companyName, department, position, email);
+            if (status.equalsIgnoreCase("Approved")) {
+                rep.setApproved(true);
+            }
+            reps[companyRepCount++] = rep;
+        }
+        
+        return reps;
+    }
+
+    public static int getCompanyRepCount() {
+        return companyRepCount;
+    }
 }

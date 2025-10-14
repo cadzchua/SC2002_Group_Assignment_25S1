@@ -23,26 +23,82 @@ public class CompanyRep extends User {
         approved = val;
     }
 
-    public void createInternship(String title, String desc, String level, String major, String startDate, String endDate, int slots) {
+    public void createInternship(String title, String desc, String level, String major, 
+                                 String openingDate, String closingDate, int slots) {
         if (internshipCount >= 5) {
-            System.out.println("Maximum 5 internships allowed per company rep.");
+            System.out.println("Maximum 5 internships allowed per company representative.");
             return;
         }
-        internships[internshipCount++] = new Internship(title, desc, level, major, startDate, endDate, "Pending", companyName, this.name, slots);
-        System.out.println("Internship \"" + title + "\" created and pending approval.");
+        if (slots > 10) {
+            slots = 10;
+            System.out.println("Maximum slots per internship is 10. Adjusted to 10.");
+        }
+        internships[internshipCount++] = new Internship(title, desc, level, major, openingDate, 
+                                                        closingDate, "Pending", companyName, 
+                                                        this.name, slots);
+        System.out.println("Internship \"" + title + "\" created and pending approval from Career Center Staff.");
     }
 
     public void viewInternships() {
-        System.out.println("Your Internships:");
+        System.out.println("\n=== Your Internships ===");
+        if (internshipCount == 0) {
+            System.out.println("No internships created yet.");
+            return;
+        }
         for (int i = 0; i < internshipCount; i++) {
             if (internships[i] != null) {
                 internships[i].showInfo();
+                System.out.println("------------------------");
             }
         }
     }
 
+    public void viewApplicationsForInternship(String title) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(title)) {
+                internships[i].viewApplicants();
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void approveApplication(String internshipTitle, String studentId) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(internshipTitle)) {
+                internships[i].approveApplication(studentId);
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void rejectApplication(String internshipTitle, String studentId) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(internshipTitle)) {
+                internships[i].rejectApplication(studentId);
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void toggleInternshipVisibility(String title) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(title)) {
+                internships[i].toggleVisibility();
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
     public Internship[] getInternships() {
         return internships;
+    }
+
+    public int getInternshipCount() {
+        return internshipCount;
     }
 
     public String getCompanyName() {
@@ -63,6 +119,6 @@ public class CompanyRep extends User {
         System.out.println("Company: " + companyName);
         System.out.println("Department: " + department);
         System.out.println("Position: " + position);
-        System.out.println("Approved: " + approved);
+        System.out.println("Approved: " + (approved ? "Yes" : "No"));
     }
 }

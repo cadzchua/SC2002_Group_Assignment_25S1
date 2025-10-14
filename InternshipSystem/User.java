@@ -18,6 +18,10 @@ public class User {
         return id.equals(inputId) && password.equals(inputPw);
     }
 
+    public void logout() {
+        System.out.println("Logged out successfully!");
+    }
+
     public void changePassword(String oldPw, String newPw) {
         if (password.equals(oldPw)) {
             password = newPw;
@@ -33,6 +37,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void showInfo() {
