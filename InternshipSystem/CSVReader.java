@@ -58,6 +58,36 @@ public class CSVReader {
             System.out.println("Error updating file: " + filename);
         }
     }
+
+    public static void updateInternshipCSV(String filename, Internship[] internships, int internshipCount) {
+        try {
+            FileWriter fw = new FileWriter(filename, false);
+            // Write header
+            fw.write("Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible\n");
+            // Write all internships
+            for (int i = 0; i < internshipCount; i++) {
+                if (internships[i] != null) {
+                    String visible = internships[i].getVisibility() ? "true" : "false";
+                    String line = internships[i].getTitle() + "," +
+                                  internships[i].getDescription() + "," +
+                                  internships[i].getLevel() + "," +
+                                  internships[i].getPreferredMajor() + "," +
+                                  internships[i].getOpeningDate() + "," +
+                                  internships[i].getClosingDate() + "," +
+                                  internships[i].getStatus() + "," +
+                                  internships[i].getCompanyName() + "," +
+                                  internships[i].getCompanyRep() + "," +
+                                  internships[i].getSlots() + "," +
+                                  visible;
+                    fw.write(line + "\n");
+                }
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error updating file: " + filename);
+            e.printStackTrace();
+        }
+    }
 }
 
 
