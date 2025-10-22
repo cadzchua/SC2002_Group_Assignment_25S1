@@ -33,9 +33,20 @@ public class CompanyRep extends User {
             slots = 10;
             System.out.println("Maximum slots per internship is 10. Adjusted to 10.");
         }
-        internships[internshipCount++] = new Internship(title, desc, level, major, openingDate, 
-                                                        closingDate, "Pending", companyName, 
-                                                        this.name, slots);
+        Internship newInternship = new Internship(title, desc, level, major, openingDate, 
+                                                  closingDate, "Pending", companyName, 
+                                                  this.name, slots);
+        // Set visibility to ON by default
+        newInternship.setVisible(true);
+        internships[internshipCount++] = newInternship;
+        
+        // Save to CSV file
+        // CSV format: Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible
+        String csvLine = title + "," + desc + "," + level + "," + major + "," + 
+                        openingDate + "," + closingDate + ",Pending," + companyName + "," + 
+                        this.name + "," + slots + ",true";
+        CSVReader.appendCSV("sample_internship_list.csv", csvLine);
+        
         System.out.println("Internship \"" + title + "\" created and pending approval from Career Center Staff.");
     }
 
@@ -47,6 +58,21 @@ public class CompanyRep extends User {
         }
         for (int i = 0; i < internshipCount; i++) {
             if (internships[i] != null) {
+                internships[i].showInfo();
+                System.out.println("------------------------");
+            }
+        }
+    }
+
+    public void viewInternshipsNumbered() {
+        System.out.println("\n=== Your Internships ===");
+        if (internshipCount == 0) {
+            System.out.println("No internships created yet.");
+            return;
+        }
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null) {
+                System.out.println("\n[" + (i + 1) + "]");
                 internships[i].showInfo();
                 System.out.println("------------------------");
             }
