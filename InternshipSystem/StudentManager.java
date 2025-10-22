@@ -57,19 +57,26 @@ public class StudentManager {
                     
                 case 2:
                     System.out.println("\n=== Available Internships ===");
-                    boolean found = false;
+                    // Build list of available internships
+                    Internship[] availableInternships = new Internship[100];
+                    int availableCount = 0;
                     for (Internship internship : internships) {
                         if (internship != null && 
                             internship.isVisible() && 
                             internship.isEligibleForStudent(loggedIn) &&
                             !internship.getStatus().equals("Filled")) {
-                            internship.showInfo();
-                            System.out.println("------------------------");
-                            found = true;
+                            availableInternships[availableCount++] = internship;
                         }
                     }
-                    if (!found) {
+                    
+                    if (availableCount == 0) {
                         System.out.println("No internships available for your profile.");
+                    } else {
+                        for (int i = 0; i < availableCount; i++) {
+                            System.out.println("\n[" + (i + 1) + "]");
+                            availableInternships[i].showInfo();
+                            System.out.println("------------------------");
+                        }
                     }
                     break;
                     
@@ -78,21 +85,39 @@ public class StudentManager {
                         System.out.println("You cannot apply for more internships.");
                         break;
                     }
-                    System.out.print("Enter Internship Title to apply: ");
-                    String title = sc.nextLine();
                     
-                    Internship selectedInternship = null;
+                    // Build list of available internships for application
+                    Internship[] applyInternships = new Internship[100];
+                    int applyCount = 0;
                     for (Internship internship : internships) {
-                        if (internship != null && internship.getTitle().equals(title)) {
-                            selectedInternship = internship;
-                            break;
+                        if (internship != null && 
+                            internship.isVisible() && 
+                            internship.isEligibleForStudent(loggedIn) &&
+                            !internship.getStatus().equals("Filled")) {
+                            applyInternships[applyCount++] = internship;
                         }
                     }
                     
-                    if (selectedInternship != null) {
-                        loggedIn.applyInternship(selectedInternship);
-                    } else {
-                        System.out.println("Internship not found.");
+                    if (applyCount == 0) {
+                        System.out.println("No internships available to apply for.");
+                        break;
+                    }
+                    
+                    // Display numbered list
+                    System.out.println("\n=== Select Internship to Apply ===");
+                    for (int i = 0; i < applyCount; i++) {
+                        System.out.println((i + 1) + ". " + applyInternships[i].getTitle() + 
+                                         " (" + applyInternships[i].getLevel() + " - " + 
+                                         applyInternships[i].getCompanyName() + ")");
+                    }
+                    System.out.print("Enter number (or 0 to cancel): ");
+                    int applyChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (applyChoice > 0 && applyChoice <= applyCount) {
+                        loggedIn.applyInternship(applyInternships[applyChoice - 1]);
+                    } else if (applyChoice != 0) {
+                        System.out.println("Invalid selection.");
                     }
                     break;
                     
@@ -101,23 +126,49 @@ public class StudentManager {
                     break;
                     
                 case 5:
-                    System.out.print("Enter Internship Title to accept: ");
-                    String acceptTitle = sc.nextLine();
-                    loggedIn.acceptPlacement(acceptTitle);
+                    // Get list of successful applications
+                    loggedIn.viewApplications();
+                    System.out.print("\nEnter the application number to accept (or 0 to cancel): ");
+                    int acceptChoice = sc.nextInt();
+                    sc.nextLine();
                     
-                    // Update internship filled slots
-                    for (Internship internship : internships) {
-                        if (internship != null && internship.getTitle().equals(acceptTitle)) {
-                            internship.confirmPlacement();
-                            break;
+                    if (acceptChoice > 0 && acceptChoice <= 3) {
+                        String acceptTitle = loggedIn.getApplicationTitle(acceptChoice - 1);
+                        if (acceptTitle != null) {
+                            loggedIn.acceptPlacement(acceptTitle);
+                            
+                            // Update internship filled slots
+                            for (Internship internship : internships) {
+                                if (internship != null && internship.getTitle().equals(acceptTitle)) {
+                                    internship.confirmPlacement();
+                                    break;
+                                }
+                            }
+                        } else {
+                            System.out.println("No application at that number.");
                         }
+                    } else if (acceptChoice != 0) {
+                        System.out.println("Invalid selection.");
                     }
                     break;
                     
                 case 6:
-                    System.out.print("Enter Internship Title to withdraw from: ");
-                    String withdrawTitle = sc.nextLine();
-                    loggedIn.requestWithdrawal(withdrawTitle);
+                    // Get list of applications for withdrawal
+                    loggedIn.viewApplications();
+                    System.out.print("\nEnter the application number to withdraw from (or 0 to cancel): ");
+                    int withdrawChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (withdrawChoice > 0 && withdrawChoice <= 3) {
+                        String withdrawTitle = loggedIn.getApplicationTitle(withdrawChoice - 1);
+                        if (withdrawTitle != null) {
+                            loggedIn.requestWithdrawal(withdrawTitle);
+                        } else {
+                            System.out.println("No application at that number.");
+                        }
+                    } else if (withdrawChoice != 0) {
+                        System.out.println("Invalid selection.");
+                    }
                     break;
                     
                 case 7:
