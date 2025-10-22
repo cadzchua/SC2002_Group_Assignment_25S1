@@ -17,8 +17,9 @@ public class Main {
         CompanyRep[] reps = CSVLoader.loadCompanyReps();
         int repCount = CSVLoader.getCompanyRepCount();
         
-        // Initialize internships array
-        Internship[] internships = new Internship[100];
+        // Load internships from CSV
+        Internship[] internships = CSVLoader.loadInternships();
+        int internshipCount = CSVLoader.getInternshipCount();
 
         // Create managers
         StudentManager sm = new StudentManager(students, studentCount, internships);
@@ -54,6 +55,34 @@ public class Main {
                     stm.showStaffCLI(sc);
                     break;
                 case 4:
+                    // Save all data before exiting
+                    System.out.println("Saving data...");
+                    
+                    // Count total internships (including those from company reps)
+                    int totalInternships = internshipCount;
+                    for (int i = 0; i < repCount; i++) {
+                        if (reps[i] != null) {
+                            Internship[] repInternships = reps[i].getInternships();
+                            for (int j = 0; j < reps[i].getInternshipCount(); j++) {
+                                if (repInternships[j] != null) {
+                                    // Check if this internship is already in global array
+                                    boolean found = false;
+                                    for (int k = 0; k < internshipCount; k++) {
+                                        if (internships[k] != null && 
+                                            internships[k].getTitle().equals(repInternships[j].getTitle())) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found && totalInternships < internships.length) {
+                                        internships[totalInternships++] = repInternships[j];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    CSVReader.updateInternshipCSV("sample_internship_list.csv", internships, totalInternships);
                     System.out.println("Thank you for using the Internship Placement System. Goodbye!");
                     break;
                 default:
