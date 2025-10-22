@@ -169,6 +169,13 @@ public class Student extends User {
         return appCount;
     }
 
+    public String getApplicationTitle(int index) {
+        if (index >= 0 && index < appCount) {
+            return appliedInternships[index];
+        }
+        return null;
+    }
+
     public String getAcceptedInternship() {
         return acceptedInternship;
     }
