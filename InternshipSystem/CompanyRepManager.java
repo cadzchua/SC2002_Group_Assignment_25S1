@@ -100,21 +100,140 @@ public class CompanyRepManager {
                     break;
                     
                 case 2:
+                    // Title validation
                     System.out.print("Internship Title: ");
                     String title = sc.nextLine();
+                    if (!InputValidator.isNotEmpty(title)) {
+                        System.out.println("Error: Title cannot be empty!");
+                        break;
+                    }
+                    
+                    // Description validation
                     System.out.print("Description: ");
                     String desc = sc.nextLine();
-                    System.out.print("Level (Basic/Intermediate/Advanced): ");
-                    String level = sc.nextLine();
-                    System.out.print("Preferred Major: ");
-                    String major = sc.nextLine();
-                    System.out.print("Opening Date (YYYY-MM-DD): ");
-                    String openingDate = sc.nextLine();
-                    System.out.print("Closing Date (YYYY-MM-DD): ");
-                    String closingDate = sc.nextLine();
-                    System.out.print("Number of slots (max 10): ");
-                    int slots = sc.nextInt();
-                    sc.nextLine();
+                    if (!InputValidator.isNotEmpty(desc)) {
+                        System.out.println("Error: Description cannot be empty!");
+                        break;
+                    }
+                    
+                    // Level validation with retry
+                    String level = "";
+                    while (true) {
+                        System.out.print("Level (Basic/Intermediate/Advanced): ");
+                        level = sc.nextLine();
+                        if (InputValidator.isValidLevel(level)) {
+                            level = InputValidator.normalizeLevel(level);
+                            break;
+                        } else {
+                            System.out.println(InputValidator.getLevelError());
+                            System.out.print("Try again? (Y/N): ");
+                            String retry = sc.nextLine();
+                            if (!retry.equalsIgnoreCase("Y")) {
+                                System.out.println("Internship creation cancelled.");
+                                break;
+                            }
+                        }
+                    }
+                    if (!InputValidator.isValidLevel(level)) {
+                        break; // User chose not to retry
+                    }
+                    
+                    // Major validation with list display
+                    String major = "";
+                    while (true) {
+                        System.out.println("\nValid Majors:");
+                        System.out.println(InputValidator.getValidMajorsList());
+                        System.out.print("Preferred Major: ");
+                        major = sc.nextLine();
+                        if (InputValidator.isValidMajor(major)) {
+                            major = InputValidator.normalizeMajor(major);
+                            break;
+                        } else {
+                            System.out.println(InputValidator.getMajorError());
+                            System.out.print("Try again? (Y/N): ");
+                            String retry = sc.nextLine();
+                            if (!retry.equalsIgnoreCase("Y")) {
+                                System.out.println("Internship creation cancelled.");
+                                break;
+                            }
+                        }
+                    }
+                    if (!InputValidator.isValidMajor(major)) {
+                        break; // User chose not to retry
+                    }
+                    
+                    // Opening date validation
+                    String openingDate = "";
+                    while (true) {
+                        System.out.print("Opening Date (YYYY-MM-DD): ");
+                        openingDate = sc.nextLine();
+                        if (InputValidator.isValidDate(openingDate)) {
+                            break;
+                        } else {
+                            System.out.println(InputValidator.getDateFormatError());
+                            System.out.print("Try again? (Y/N): ");
+                            String retry = sc.nextLine();
+                            if (!retry.equalsIgnoreCase("Y")) {
+                                System.out.println("Internship creation cancelled.");
+                                break;
+                            }
+                        }
+                    }
+                    if (!InputValidator.isValidDate(openingDate)) {
+                        break; // User chose not to retry
+                    }
+                    
+                    // Closing date validation
+                    String closingDate = "";
+                    while (true) {
+                        System.out.print("Closing Date (YYYY-MM-DD): ");
+                        closingDate = sc.nextLine();
+                        if (!InputValidator.isValidDate(closingDate)) {
+                            System.out.println(InputValidator.getDateFormatError());
+                        } else if (!InputValidator.isClosingAfterOpening(openingDate, closingDate)) {
+                            System.out.println("Error: Closing date must be after opening date!");
+                        } else {
+                            break;
+                        }
+                        System.out.print("Try again? (Y/N): ");
+                        String retry = sc.nextLine();
+                        if (!retry.equalsIgnoreCase("Y")) {
+                            System.out.println("Internship creation cancelled.");
+                            break;
+                        }
+                    }
+                    if (!InputValidator.isValidDate(closingDate) || 
+                        !InputValidator.isClosingAfterOpening(openingDate, closingDate)) {
+                        break; // User chose not to retry
+                    }
+                    
+                    // Slots validation
+                    int slots = 0;
+                    while (true) {
+                        System.out.print("Number of slots (1-10): ");
+                        try {
+                            slots = sc.nextInt();
+                            sc.nextLine();
+                            if (InputValidator.isValidSlots(slots)) {
+                                break;
+                            } else {
+                                System.out.println("Error: Slots must be between 1 and 10!");
+                            }
+                        } catch (Exception e) {
+                            sc.nextLine(); // clear buffer
+                            System.out.println("Error: Please enter a valid number!");
+                        }
+                        System.out.print("Try again? (Y/N): ");
+                        String retry = sc.nextLine();
+                        if (!retry.equalsIgnoreCase("Y")) {
+                            System.out.println("Internship creation cancelled.");
+                            slots = 0;
+                            break;
+                        }
+                    }
+                    if (slots == 0) {
+                        break; // User chose not to retry
+                    }
 
                     loggedIn.createInternship(title, desc, level, major, openingDate, closingDate, slots);
 
@@ -134,36 +253,117 @@ public class CompanyRepManager {
                     break;
                     
                 case 3:
-                    loggedIn.viewInternships();
+                    loggedIn.viewInternshipsNumbered();
                     break;
                     
                 case 4:
-                    System.out.print("Enter Internship Title: ");
-                    String viewTitle = sc.nextLine();
-                    loggedIn.viewApplicationsForInternship(viewTitle);
+                    // Show numbered list of internships
+                    Internship[] repInternships = loggedIn.getInternships();
+                    int repInternshipCount = loggedIn.getInternshipCount();
+                    
+                    if (repInternshipCount == 0) {
+                        System.out.println("You haven't created any internships yet.");
+                        break;
+                    }
+                    
+                    System.out.println("\n=== Your Internships ===");
+                    for (int i = 0; i < repInternshipCount; i++) {
+                        if (repInternships[i] != null) {
+                            System.out.println((i + 1) + ". " + repInternships[i].getTitle() + 
+                                             " (" + repInternships[i].getStatus() + ")");
+                        }
+                    }
+                    System.out.print("Select internship number to view applications (or 0 to cancel): ");
+                    int viewChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (viewChoice > 0 && viewChoice <= repInternshipCount) {
+                        repInternships[viewChoice - 1].viewApplicants();
+                    } else if (viewChoice != 0) {
+                        System.out.println("Invalid selection.");
+                    }
                     break;
                     
                 case 5:
-                    System.out.print("Enter Internship Title: ");
-                    String appTitle = sc.nextLine();
-                    System.out.print("Enter Student ID: ");
-                    String studentId = sc.nextLine();
-                    System.out.print("Approve or Reject? (A/R): ");
-                    String decision = sc.nextLine();
+                    // Show numbered list of internships
+                    Internship[] appInternships = loggedIn.getInternships();
+                    int appInternshipCount = loggedIn.getInternshipCount();
                     
-                    if (decision.equalsIgnoreCase("A")) {
-                        loggedIn.approveApplication(appTitle, studentId);
-                    } else if (decision.equalsIgnoreCase("R")) {
-                        loggedIn.rejectApplication(appTitle, studentId);
-                    } else {
-                        System.out.println("Invalid choice.");
+                    if (appInternshipCount == 0) {
+                        System.out.println("You haven't created any internships yet.");
+                        break;
+                    }
+                    
+                    System.out.println("\n=== Your Internships ===");
+                    for (int i = 0; i < appInternshipCount; i++) {
+                        if (appInternships[i] != null) {
+                            System.out.println((i + 1) + ". " + appInternships[i].getTitle() + 
+                                             " - Applicants: " + appInternships[i].getApplicantCount());
+                        }
+                    }
+                    System.out.print("Select internship number (or 0 to cancel): ");
+                    int appChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (appChoice > 0 && appChoice <= appInternshipCount) {
+                        Internship selectedInternship = appInternships[appChoice - 1];
+                        
+                        // Show applicants
+                        selectedInternship.viewApplicants();
+                        
+                        if (selectedInternship.getApplicantCount() > 0) {
+                            System.out.print("\nSelect applicant number to process (or 0 to cancel): ");
+                            int studentChoice = sc.nextInt();
+                            sc.nextLine();
+                            
+                            if (studentChoice > 0 && studentChoice <= selectedInternship.getApplicantCount()) {
+                                Student[] applicants = selectedInternship.getApplicants();
+                                String studentId = applicants[studentChoice - 1].getId();
+                                
+                                System.out.print("Approve or Reject? (A/R): ");
+                                String decision = sc.nextLine();
+                                
+                                if (decision.equalsIgnoreCase("A")) {
+                                    selectedInternship.approveApplication(studentId);
+                                } else if (decision.equalsIgnoreCase("R")) {
+                                    selectedInternship.rejectApplication(studentId);
+                                } else {
+                                    System.out.println("Invalid choice.");
+                                }
+                            }
+                        }
+                    } else if (appChoice != 0) {
+                        System.out.println("Invalid selection.");
                     }
                     break;
                     
                 case 6:
-                    System.out.print("Enter Internship Title: ");
-                    String toggleTitle = sc.nextLine();
-                    loggedIn.toggleInternshipVisibility(toggleTitle);
+                    // Show numbered list of internships
+                    Internship[] toggleInternships = loggedIn.getInternships();
+                    int toggleInternshipCount = loggedIn.getInternshipCount();
+                    
+                    if (toggleInternshipCount == 0) {
+                        System.out.println("You haven't created any internships yet.");
+                        break;
+                    }
+                    
+                    System.out.println("\n=== Your Internships ===");
+                    for (int i = 0; i < toggleInternshipCount; i++) {
+                        if (toggleInternships[i] != null) {
+                            String visibility = toggleInternships[i].getVisibility() ? "Visible" : "Hidden";
+                            System.out.println((i + 1) + ". " + toggleInternships[i].getTitle() + 
+                                             " (" + visibility + ")");
+                        }
+                    }
+                    System.out.print("Select internship number to toggle visibility (or 0 to cancel): ");
+                    int toggleChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (toggleChoice > 0 && toggleChoice <= toggleInternshipCount) {
+                        toggleInternships[toggleChoice - 1].toggleVisibility();
+                    } else if (toggleChoice != 0) {
+                        System.out.println("Invalid selection.");
+                    }
                     break;
                     
                 case 7:
