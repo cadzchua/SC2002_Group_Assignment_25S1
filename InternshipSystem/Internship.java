@@ -103,6 +103,14 @@ public class Internship {
         System.out.println("Visibility toggled to: " + (visible ? "ON" : "OFF"));
     }
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean getVisibility() {
+        return visible;
+    }
+
     public boolean isVisible() {
         return visible && status.equals("Approved");
     }
