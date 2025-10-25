@@ -123,12 +123,20 @@ public class InputValidator {
     
     /**
      * Validates if the major is valid
-     * @param major The major to validate
+     * @param major The major to validate (can be major name or number 1-9)
      * @return true if valid
      */
     public static boolean isValidMajor(String major) {
         if (major == null || major.trim().isEmpty()) {
             return false;
+        }
+        
+        // Check if it's a number (1-9)
+        try {
+            int majorIndex = Integer.parseInt(major.trim());
+            return majorIndex >= 1 && majorIndex <= VALID_MAJORS.length;
+        } catch (NumberFormatException e) {
+            // Not a number, check if it's a valid major name
         }
         
         for (String validMajor : VALID_MAJORS) {
@@ -156,11 +164,21 @@ public class InputValidator {
     
     /**
      * Normalizes the major string to proper case
-     * @param major The major to normalize
+     * @param major The major to normalize (can be major name or number 1-9)
      * @return Normalized major string
      */
     public static String normalizeMajor(String major) {
         if (major == null) return "";
+        
+        // Check if it's a number (1-9)
+        try {
+            int majorIndex = Integer.parseInt(major.trim());
+            if (majorIndex >= 1 && majorIndex <= VALID_MAJORS.length) {
+                return VALID_MAJORS[majorIndex - 1];
+            }
+        } catch (NumberFormatException e) {
+            // Not a number, check if it's a valid major name
+        }
         
         for (String validMajor : VALID_MAJORS) {
             if (validMajor.equalsIgnoreCase(major.trim())) {
