@@ -44,11 +44,29 @@ public class CompanyRepManager {
     }
 
     public void showCompanyRepCLI(Scanner sc) {
-        System.out.println("\n1. Login");
-        System.out.println("2. Register");
-        System.out.print("Select option: ");
-        int option = sc.nextInt();
-        sc.nextLine();
+        int option = -1;
+        while (option < 1 || option > 3) {
+            System.out.println("\n1. Login");
+            System.out.println("2. Register");
+            System.out.println("3. Back to Main Menu");
+            System.out.print("Select option: ");
+            try {
+                option = sc.nextInt();
+                sc.nextLine();
+                if (option < 1 || option > 3) {
+                    System.out.println("Invalid option! Please select 1, 2, or 3.");
+                }
+            } catch (Exception e) {
+                sc.nextLine(); // Clear invalid input
+                System.out.println("Invalid option! Please select 1, 2, or 3.");
+                option = -1;
+            }
+        }
+
+        if (option == 3) {
+            System.out.println("Returning to Main Menu...");
+            return;
+        }
 
         if (option == 2) {
             registerCompanyRep(sc);
