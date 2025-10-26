@@ -10,7 +10,7 @@ public class CSVReader {
             int row = 0;
             while (sc.hasNextLine() && row < maxRows) {
                 String line = sc.nextLine();
-                if (line.trim().isEmpty()) continue; // skip empty lines
+                if (line.trim().isEmpty()) continue;
                 String[] fields = line.split(",");
                 for (int col = 0; col < fields.length && col < maxCols; col++) {
                     data[row][col] = fields[col].trim();
@@ -37,9 +37,7 @@ public class CSVReader {
     public static void updateCompanyRepCSV(String filename, CompanyRep[] reps, int repCount) {
         try {
             FileWriter fw = new FileWriter(filename, false);
-            // Write header
             fw.write("CompanyRepID,Name,CompanyName,Department,Position,Email,Status\n");
-            // Write all company representatives
             for (int i = 0; i < repCount; i++) {
                 if (reps[i] != null) {
                     String status = reps[i].isApproved() ? "Approved" : "Pending";
@@ -62,9 +60,7 @@ public class CSVReader {
     public static void updateInternshipCSV(String filename, Internship[] internships, int internshipCount) {
         try {
             FileWriter fw = new FileWriter(filename, false);
-            // Write header
             fw.write("Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible\n");
-            // Write all internships
             for (int i = 0; i < internshipCount; i++) {
                 if (internships[i] != null) {
                     String visible = internships[i].getVisibility() ? "true" : "false";

@@ -5,10 +5,8 @@ import java.util.regex.Matcher;
 
 public class InputValidator {
     
-    // Valid internship levels
     private static final String[] VALID_LEVELS = {"Basic", "Intermediate", "Advanced"};
     
-    // Valid majors (should match student list)
     private static final String[] VALID_MAJORS = {
         "Computer Science",
         "Data Science & AI", 
@@ -31,7 +29,6 @@ public class InputValidator {
             return false;
         }
         
-        // Check format: YYYY-MM-DD
         Pattern pattern = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$");
         Matcher matcher = pattern.matcher(date);
         
@@ -39,21 +36,17 @@ public class InputValidator {
             return false;
         }
         
-        // Extract year, month, day
         String[] parts = date.split("-");
         int year = Integer.parseInt(parts[0]);
         int month = Integer.parseInt(parts[1]);
         int day = Integer.parseInt(parts[2]);
         
-        // Basic validation
         if (year < 2000 || year > 2100) {
             return false;
         }
         
-        // Check days in month
         int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         
-        // Leap year check
         if (isLeapYear(year)) {
             daysInMonth[1] = 29;
         }
@@ -83,7 +76,6 @@ public class InputValidator {
             return false;
         }
         
-        // Simple string comparison works for YYYY-MM-DD format
         return closingDate.compareTo(openingDate) > 0;
     }
     
@@ -118,7 +110,7 @@ public class InputValidator {
                 return validLevel;
             }
         }
-        return "Basic"; // default
+        return "Basic";
     }
     
     /**
@@ -131,12 +123,10 @@ public class InputValidator {
             return false;
         }
         
-        // Check if it's a number (1-9)
         try {
             int majorIndex = Integer.parseInt(major.trim());
             return majorIndex >= 1 && majorIndex <= VALID_MAJORS.length;
         } catch (NumberFormatException e) {
-            // Not a number, check if it's a valid major name
         }
         
         for (String validMajor : VALID_MAJORS) {
@@ -170,14 +160,12 @@ public class InputValidator {
     public static String normalizeMajor(String major) {
         if (major == null) return "";
         
-        // Check if it's a number (1-9)
         try {
             int majorIndex = Integer.parseInt(major.trim());
             if (majorIndex >= 1 && majorIndex <= VALID_MAJORS.length) {
                 return VALID_MAJORS[majorIndex - 1];
             }
         } catch (NumberFormatException e) {
-            // Not a number, check if it's a valid major name
         }
         
         for (String validMajor : VALID_MAJORS) {

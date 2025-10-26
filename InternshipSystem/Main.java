@@ -7,21 +7,29 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Load CSV data for students and staff
         Student[] students = CSVLoader.loadStudents();
         int studentCount = CSVLoader.getStudentCount();
         CareerCentreStaff[] staff = CSVLoader.loadStaff();
         int staffCount = CSVLoader.getStaffCount();
 
-        // Load company representatives from CSV
         CompanyRep[] reps = CSVLoader.loadCompanyReps();
         int repCount = CSVLoader.getCompanyRepCount();
         
-        // Load internships from CSV
         Internship[] internships = CSVLoader.loadInternships();
         int internshipCount = CSVLoader.getInternshipCount();
 
-        // Create managers
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null) {
+                String companyRepName = internships[i].getCompanyRep();
+                for (int j = 0; j < repCount; j++) {
+                    if (reps[j] != null && reps[j].getName().equals(companyRepName)) {
+                        reps[j].addLoadedInternship(internships[i]);
+                        break;
+                    }
+                }
+            }
+        }
+
         StudentManager sm = new StudentManager(students, studentCount, internships);
         CompanyRepManager cm = new CompanyRepManager(reps, repCount, internships);
         StaffManager stm = new StaffManager(staff, staffCount, reps, repCount, internships, students, studentCount);
@@ -45,27 +53,22 @@ public class Main {
                     break;
                 case 2:
                     cm.showCompanyRepCLI(sc);
-                    // Update repCount after registration
                     repCount = cm.getRepCount();
                     reps = cm.getReps();
-                    // Update StaffManager with new repCount
                     stm = new StaffManager(staff, staffCount, reps, repCount, internships, students, studentCount);
                     break;
                 case 3:
                     stm.showStaffCLI(sc);
                     break;
                 case 4:
-                    // Save all data before exiting
                     System.out.println("Saving data...");
                     
-                    // Count total internships (including those from company reps)
                     int totalInternships = internshipCount;
                     for (int i = 0; i < repCount; i++) {
                         if (reps[i] != null) {
                             Internship[] repInternships = reps[i].getInternships();
                             for (int j = 0; j < reps[i].getInternshipCount(); j++) {
                                 if (repInternships[j] != null) {
-                                    // Check if this internship is already in global array
                                     boolean found = false;
                                     for (int k = 0; k < internshipCount; k++) {
                                         if (internships[k] != null && 

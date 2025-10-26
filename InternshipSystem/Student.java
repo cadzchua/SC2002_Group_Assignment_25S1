@@ -5,10 +5,10 @@ public class Student extends User {
     private String major;
     private int year;
     private String[] appliedInternships = new String[3];
-    private String[] applicationStatus = new String[3]; // "Pending", "Successful", "Unsuccessful"
+    private String[] applicationStatus = new String[3];
     private int appCount = 0;
     private String acceptedInternship = null;
-    private String[] withdrawalRequests = new String[3]; // Track withdrawal requests
+    private String[] withdrawalRequests = new String[3];
     private int withdrawalCount = 0;
 
     public Student(String id, String name, String major, int year, String email) {
@@ -40,13 +40,11 @@ public class Student extends User {
             return;
         }
 
-        // Check year restrictions
         if (year < 3 && !internship.getLevel().equalsIgnoreCase("Basic")) {
             System.out.println("Year 1-2 students can only apply for Basic-level internships.");
             return;
         }
 
-        // Check if internship is available
         if (!internship.getStatus().equals("Approved")) {
             System.out.println("This internship is not available for applications.");
             return;
@@ -86,13 +84,11 @@ public class Student extends User {
     }
 
     public void acceptPlacement(String internshipTitle) {
-        // Check if the application is successful
         for (int i = 0; i < appCount; i++) {
             if (appliedInternships[i].equals(internshipTitle) && applicationStatus[i].equals("Successful")) {
                 acceptedInternship = internshipTitle;
                 System.out.println("Internship placement accepted: " + internshipTitle);
                 
-                // Withdraw all other applications
                 for (int j = 0; j < appCount; j++) {
                     if (j != i && !applicationStatus[j].equals("Unsuccessful")) {
                         applicationStatus[j] = "Withdrawn";
@@ -118,7 +114,6 @@ public class Student extends User {
             return;
         }
 
-        // Add to withdrawal requests
         if (withdrawalCount < 3) {
             withdrawalRequests[withdrawalCount++] = internshipTitle;
             System.out.println("Withdrawal request submitted for: " + internshipTitle);
@@ -135,7 +130,6 @@ public class Student extends User {
     }
 
     public void approveWithdrawal(String internshipTitle) {
-        // Remove from applied internships or accepted placement
         if (acceptedInternship != null && acceptedInternship.equals(internshipTitle)) {
             acceptedInternship = null;
             System.out.println("Placement withdrawn: " + internshipTitle);
@@ -148,7 +142,6 @@ public class Student extends User {
             }
         }
 
-        // Remove from withdrawal requests
         for (int i = 0; i < withdrawalCount; i++) {
             if (withdrawalRequests[i] != null && withdrawalRequests[i].equals(internshipTitle)) {
                 withdrawalRequests[i] = null;

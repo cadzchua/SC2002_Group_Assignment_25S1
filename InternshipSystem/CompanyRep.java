@@ -23,6 +23,12 @@ public class CompanyRep extends User {
         approved = val;
     }
 
+    public void addLoadedInternship(Internship internship) {
+        if (internshipCount < internships.length) {
+            internships[internshipCount++] = internship;
+        }
+    }
+
     public void createInternship(String title, String desc, String level, String major, 
                                  String openingDate, String closingDate, int slots) {
         if (internshipCount >= 5) {
@@ -36,12 +42,10 @@ public class CompanyRep extends User {
         Internship newInternship = new Internship(title, desc, level, major, openingDate, 
                                                   closingDate, "Pending", companyName, 
                                                   this.name, slots);
-        // Set visibility to ON by default
+                                                  
         newInternship.setVisible(true);
         internships[internshipCount++] = newInternship;
         
-        // Save to CSV file
-        // CSV format: Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible
         String csvLine = title + "," + desc + "," + level + "," + major + "," + 
                         openingDate + "," + closingDate + ",Pending," + companyName + "," + 
                         this.name + "," + slots + ",true";

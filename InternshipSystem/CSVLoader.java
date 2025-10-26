@@ -10,7 +10,6 @@ public class CSVLoader {
         studentCount = 0;
         
         for (int i = 0; i < data.length && data[i][0] != null; i++) {
-            // Assuming CSV format: id, name, major, year, email
             String id = data[i][0];
             String name = data[i][1];
             String major = data[i].length > 2 && data[i][2] != null ? data[i][2] : "";
@@ -40,7 +39,6 @@ public class CSVLoader {
         staffCount = 0;
         
         for (int i = 0; i < data.length && data[i][0] != null; i++) {
-            // Assuming CSV format: id, name, department, email
             String id = data[i][0];
             String name = data[i][1];
             String department = data[i].length > 2 && data[i][2] != null ? data[i][2] : "";
@@ -64,12 +62,10 @@ public class CSVLoader {
         companyRepCount = 0;
         
         for (int i = 0; i < data.length && data[i][0] != null; i++) {
-            // Skip header row
             if (i == 0 && data[i][0].equals("CompanyRepID")) {
                 continue;
             }
             
-            // CSV format: CompanyRepID,Name,CompanyName,Department,Position,Email,Status
             String id = data[i][0];
             String name = data[i][1];
             String companyName = data[i].length > 2 && data[i][2] != null ? data[i][2] : "";
@@ -100,12 +96,10 @@ public class CSVLoader {
         internshipCount = 0;
         
         for (int i = 0; i < data.length && data[i][0] != null; i++) {
-            // Skip header row
             if (i == 0 && data[i][0].equals("Title")) {
                 continue;
             }
             
-            // CSV format: Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible
             String title = data[i][0];
             String description = data[i].length > 1 && data[i][1] != null ? data[i][1] : "";
             String level = data[i].length > 2 && data[i][2] != null ? data[i][2] : "Basic";
@@ -128,7 +122,6 @@ public class CSVLoader {
                 visible = data[i][10].equalsIgnoreCase("true") || data[i][10].equalsIgnoreCase("yes") || data[i][10].equals("1");
             }
             
-            // Validate data
             boolean hasWarning = false;
             if (!InputValidator.isNotEmpty(title)) {
                 System.out.println("WARNING: Skipping internship at line " + (i+1) + " - Empty title");

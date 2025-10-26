@@ -22,6 +22,16 @@ public class CareerCentreStaff extends User {
         CSVReader.updateCompanyRepCSV("sample_company_representative_list.csv", reps, repCount);
     }
 
+    public void updateInternshipCSV(Internship[] internships) {
+        int internshipCount = 0;
+        for (Internship internship : internships) {
+            if (internship != null) {
+                internshipCount++;
+            }
+        }
+        CSVReader.updateInternshipCSV("sample_internship_list.csv", internships, internshipCount);
+    }
+
     public void approveInternship(Internship internship) {
         internship.setStatus("Approved");
         System.out.println("Internship \"" + internship.getTitle() + "\" approved!");

@@ -7,12 +7,12 @@ public class Internship {
     private String preferredMajor;
     private String openingDate;
     private String closingDate;
-    private String status; // "Pending", "Approved", "Rejected", "Filled"
+    private String status;
     private String companyName;
     private String companyRep;
     private int slots;
     private int filledSlots = 0;
-    private boolean visible = false; // visibility toggle
+    private boolean visible = false;
     private Student[] applicants = new Student[50];
     private int applicantCount = 0;
 
@@ -28,7 +28,7 @@ public class Internship {
         this.status = status;
         this.companyName = companyName;
         this.companyRep = companyRep;
-        this.slots = Math.min(slots, 10); // max 10 slots
+        this.slots = Math.min(slots, 10);
     }
 
     public void showInfo() {
@@ -116,18 +116,15 @@ public class Internship {
     }
 
     public boolean isEligibleForStudent(Student student) {
-        // Check if student's major matches
         if (!preferredMajor.equalsIgnoreCase(student.getMajor())) {
             return false;
         }
-        // Check year restrictions for Basic level
-        if (student.getYear() < 3 && !level.equalsIgnoreCase("Basic")) {
+        if (student.getYear() < 2 && !level.equalsIgnoreCase("Basic")) {
             return false;
         }
         return true;
     }
 
-    // Getters
     public String getTitle() {
         return title;
     }

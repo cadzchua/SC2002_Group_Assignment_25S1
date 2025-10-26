@@ -31,9 +31,7 @@ public class CompanyRepManager {
 
         if (repCount < reps.length) {
             reps[repCount++] = new CompanyRep(id, name, companyName, department, position, email);
-            
-            // Save to CSV file permanently
-            // CSV format: CompanyRepID,Name,CompanyName,Department,Position,Email,Status
+
             String csvLine = id + "," + name + "," + companyName + "," + department + "," + position + "," + email + ",Pending";
             CSVReader.appendCSV("sample_company_representative_list.csv", csvLine);
             
@@ -57,7 +55,7 @@ public class CompanyRepManager {
                     System.out.println("Invalid option! Please select 1, 2, or 3.");
                 }
             } catch (Exception e) {
-                sc.nextLine(); // Clear invalid input
+                sc.nextLine();
                 System.out.println("Invalid option! Please select 1, 2, or 3.");
                 option = -1;
             }
@@ -118,7 +116,6 @@ public class CompanyRepManager {
                     break;
                     
                 case 2:
-                    // Title validation
                     System.out.print("Internship Title: ");
                     String title = sc.nextLine();
                     if (!InputValidator.isNotEmpty(title)) {
@@ -126,7 +123,6 @@ public class CompanyRepManager {
                         break;
                     }
                     
-                    // Description validation
                     System.out.print("Description: ");
                     String desc = sc.nextLine();
                     if (!InputValidator.isNotEmpty(desc)) {
@@ -134,7 +130,6 @@ public class CompanyRepManager {
                         break;
                     }
                     
-                    // Level validation with retry
                     String level = "";
                     while (true) {
                         System.out.print("Level (Basic/Intermediate/Advanced): ");
@@ -153,10 +148,9 @@ public class CompanyRepManager {
                         }
                     }
                     if (!InputValidator.isValidLevel(level)) {
-                        break; // User chose not to retry
+                        break;
                     }
                     
-                    // Major validation with list display
                     String major = "";
                     while (true) {
                         System.out.println("\nValid Majors:");
@@ -177,10 +171,9 @@ public class CompanyRepManager {
                         }
                     }
                     if (!InputValidator.isValidMajor(major)) {
-                        break; // User chose not to retry
+                        break;
                     }
                     
-                    // Opening date validation
                     String openingDate = "";
                     while (true) {
                         System.out.print("Opening Date (YYYY-MM-DD): ");
@@ -198,10 +191,9 @@ public class CompanyRepManager {
                         }
                     }
                     if (!InputValidator.isValidDate(openingDate)) {
-                        break; // User chose not to retry
+                        break;
                     }
                     
-                    // Closing date validation
                     String closingDate = "";
                     while (true) {
                         System.out.print("Closing Date (YYYY-MM-DD): ");
@@ -222,10 +214,9 @@ public class CompanyRepManager {
                     }
                     if (!InputValidator.isValidDate(closingDate) || 
                         !InputValidator.isClosingAfterOpening(openingDate, closingDate)) {
-                        break; // User chose not to retry
+                        break;
                     }
                     
-                    // Slots validation
                     int slots = 0;
                     while (true) {
                         System.out.print("Number of slots (1-10): ");
@@ -238,7 +229,7 @@ public class CompanyRepManager {
                                 System.out.println("Error: Slots must be between 1 and 10!");
                             }
                         } catch (Exception e) {
-                            sc.nextLine(); // clear buffer
+                            sc.nextLine();
                             System.out.println("Error: Please enter a valid number!");
                         }
                         System.out.print("Try again? (Y/N): ");
@@ -250,12 +241,11 @@ public class CompanyRepManager {
                         }
                     }
                     if (slots == 0) {
-                        break; // User chose not to retry
+                        break;
                     }
 
                     loggedIn.createInternship(title, desc, level, major, openingDate, closingDate, slots);
 
-                    // Add to global internship array
                     for (int i = 0; i < internships.length; i++) {
                         if (internships[i] == null) {
                             Internship[] repInternships = loggedIn.getInternships();
@@ -275,7 +265,6 @@ public class CompanyRepManager {
                     break;
                     
                 case 4:
-                    // Show numbered list of internships
                     Internship[] repInternships = loggedIn.getInternships();
                     int repInternshipCount = loggedIn.getInternshipCount();
                     
@@ -303,7 +292,6 @@ public class CompanyRepManager {
                     break;
                     
                 case 5:
-                    // Show numbered list of internships
                     Internship[] appInternships = loggedIn.getInternships();
                     int appInternshipCount = loggedIn.getInternshipCount();
                     
@@ -326,7 +314,6 @@ public class CompanyRepManager {
                     if (appChoice > 0 && appChoice <= appInternshipCount) {
                         Internship selectedInternship = appInternships[appChoice - 1];
                         
-                        // Show applicants
                         selectedInternship.viewApplicants();
                         
                         if (selectedInternship.getApplicantCount() > 0) {
@@ -356,7 +343,6 @@ public class CompanyRepManager {
                     break;
                     
                 case 6:
-                    // Show numbered list of internships
                     Internship[] toggleInternships = loggedIn.getInternships();
                     int toggleInternshipCount = loggedIn.getInternshipCount();
                     

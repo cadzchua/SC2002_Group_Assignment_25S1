@@ -84,7 +84,6 @@ public class StaffManager {
                     if (!foundPending) {
                         System.out.println("No pending company representatives.");
                     }
-                    // Update CSV file after processing all pending representatives
                     loggedIn.updateCompanyRepCSV(companyReps, repCount);
                     break;
                     
@@ -108,6 +107,7 @@ public class StaffManager {
                     if (!foundPendingInternships) {
                         System.out.println("No pending internship opportunities.");
                     }
+                    loggedIn.updateInternshipCSV(internships);
                     break;
                     
                 case 4:
