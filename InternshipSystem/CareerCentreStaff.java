@@ -54,37 +54,22 @@ public class CareerCentreStaff extends User {
     }
 
     public void generateReport(Internship[] internships, String filterType, String filterValue) {
+        ReportFilter filter = createFilter(filterType);
+        
+        if (filter == null) {
+            System.out.println("Invalid filter type.");
+            return;
+        }
+        
         System.out.println("\n=== Internship Report ===");
-        System.out.println("Filter: " + filterType + " = " + filterValue);
+        System.out.println("Filter: " + filter.getFilterName() + " = " + filterValue);
         System.out.println("------------------------");
         
         int count = 0;
         for (Internship internship : internships) {
             if (internship == null) continue;
             
-            boolean include = false;
-            switch (filterType.toLowerCase()) {
-                case "status":
-                    include = internship.getStatus().equalsIgnoreCase(filterValue);
-                    break;
-                case "major":
-                    include = internship.getPreferredMajor().equalsIgnoreCase(filterValue);
-                    break;
-                case "level":
-                    include = internship.getLevel().equalsIgnoreCase(filterValue);
-                    break;
-                case "company":
-                    include = internship.getCompanyName().equalsIgnoreCase(filterValue);
-                    break;
-                case "all":
-                    include = true;
-                    break;
-                default:
-                    System.out.println("Invalid filter type.");
-                    return;
-            }
-            
-            if (include) {
+            if (filter.matches(internship, filterValue)) {
                 internship.showInfo();
                 System.out.println("Applicants: " + internship.getApplicantCount());
                 System.out.println("------------------------");
@@ -93,6 +78,23 @@ public class CareerCentreStaff extends User {
         }
         
         System.out.println("Total internships found: " + count);
+    }
+
+    private ReportFilter createFilter(String filterType) {
+        switch (filterType.toLowerCase()) {
+            case "status":
+                return new StatusFilter();
+            case "major":
+                return new MajorFilter();
+            case "level":
+                return new LevelFilter();
+            case "company":
+                return new CompanyFilter();
+            case "all":
+                return new AllFilter();
+            default:
+                return null;
+        }
     }
 
     public void showInfo() {
