@@ -114,10 +114,19 @@ public class StudentEntity extends UserEntity {
             return;
         }
 
+        for (int i = 0; i < withdrawalCount; i++) {
+            if (withdrawalRequests[i] != null && withdrawalRequests[i].equals(internshipTitle)) {
+                System.out.println("Withdrawal request for '" + internshipTitle + "' is already pending approval.");
+                return;
+            }
+        }
+
         if (withdrawalCount < 3) {
             withdrawalRequests[withdrawalCount++] = internshipTitle;
             System.out.println("Withdrawal request submitted for: " + internshipTitle);
             System.out.println("Pending approval from Career Center Staff.");
+        } else {
+            System.out.println("Maximum withdrawal requests reached.");
         }
     }
 
@@ -147,6 +156,12 @@ public class StudentEntity extends UserEntity {
                 withdrawalRequests[i] = null;
                 break;
             }
+        }
+    }
+
+    public void releaseSlotForInternship(InternshipEntity internship) {
+        if (internship != null && internship.getFilledSlots() > 0) {
+            internship.releaseSlot();
         }
     }
 

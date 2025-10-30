@@ -98,6 +98,16 @@ public class InternshipEntity {
         }
     }
 
+    public void releaseSlot() {
+        if (filledSlots > 0) {
+            filledSlots--;
+            if (status.equals("Filled") && filledSlots < slots) {
+                status = "Approved";
+                System.out.println("Slot released. Internship status set back to 'Approved'.");
+            }
+        }
+    }
+
     public void toggleVisibility() {
         visible = !visible;
         System.out.println("Visibility toggled to: " + (visible ? "ON" : "OFF"));
@@ -119,7 +129,7 @@ public class InternshipEntity {
         if (!preferredMajor.equalsIgnoreCase(student.getMajor())) {
             return false;
         }
-        if (student.getYear() < 2 && !level.equalsIgnoreCase("Basic")) {
+        if (student.getYear() < 3 && !level.equalsIgnoreCase("Basic")) {
             return false;
         }
         return true;
@@ -131,6 +141,10 @@ public class InternshipEntity {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLevel() {
@@ -167,6 +181,10 @@ public class InternshipEntity {
 
     public int getSlots() {
         return slots;
+    }
+
+    public void setSlots(int slots) {
+        this.slots = Math.min(Math.max(1, slots), 10); 
     }
 
     public int getFilledSlots() {

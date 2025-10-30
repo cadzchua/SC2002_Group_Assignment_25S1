@@ -123,6 +123,54 @@ public class CompanyRepEntity extends UserEntity {
         System.out.println("Internship not found.");
     }
 
+    public void editInternshipDescription(String title, String newDesc) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(title)) {
+                if (internships[i].getStatus().equals("Approved")) {
+                    System.out.println("Cannot edit an approved internship.");
+                    return;
+                }
+                internships[i].setDescription(newDesc);
+                System.out.println("Description updated.");
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void editInternshipSlots(String title, int newSlots) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(title)) {
+                if (internships[i].getStatus().equals("Approved")) {
+                    System.out.println("Cannot edit an approved internship.");
+                    return;
+                }
+                internships[i].setSlots(newSlots);
+                System.out.println("Slots updated.");
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void deleteInternship(String title) {
+        for (int i = 0; i < internshipCount; i++) {
+            if (internships[i] != null && internships[i].getTitle().equals(title)) {
+                for (int j = i; j < internshipCount - 1; j++) {
+                    internships[j] = internships[j + 1];
+                }
+                internships[internshipCount - 1] = null;
+                internshipCount--;
+                return;
+            }
+        }
+        System.out.println("Internship not found.");
+    }
+
+    public void saveInternshipsToCSV(InternshipEntity[] allInternships, int totalCount) {
+        CSVReaderControl.updateInternshipCSV("sample_internship_list.csv", allInternships, totalCount);
+    }
+
     public InternshipEntity[] getInternships() {
         return internships;
     }

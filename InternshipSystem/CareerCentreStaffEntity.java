@@ -48,6 +48,20 @@ public class CareerCentreStaffEntity extends UserEntity {
                            " from internship: " + internshipTitle);
     }
 
+    public void approveWithdrawalWithSlotRelease(StudentEntity student, String internshipTitle, InternshipEntity[] internships) {
+        student.approveWithdrawal(internshipTitle);
+        
+        for (InternshipEntity internship : internships) {
+            if (internship != null && internship.getTitle().equals(internshipTitle)) {
+                internship.releaseSlot();
+                break;
+            }
+        }
+        
+        System.out.println("Withdrawal approved for student " + student.getName() + 
+                           " from internship: " + internshipTitle + ". Slot released.");
+    }
+
     public void rejectWithdrawal(StudentEntity student, String internshipTitle) {
         System.out.println("Withdrawal rejected for student " + student.getName() + 
                            " from internship: " + internshipTitle);

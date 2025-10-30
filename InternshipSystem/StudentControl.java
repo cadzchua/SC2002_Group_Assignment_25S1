@@ -21,15 +21,23 @@ public class StudentControl {
         String pw = sc.nextLine();
 
         StudentEntity loggedIn = null;
+        boolean idFound = false;
         for (int i = 0; i < studentCount; i++) {
-            if (students[i].login(id, pw)) {
-                loggedIn = students[i];
+            if (students[i].getId().equals(id)) {
+                idFound = true;
+                if (students[i].login(id, pw)) {
+                    loggedIn = students[i];
+                }
                 break;
             }
         }
 
         if (loggedIn == null) {
-            System.out.println("Login failed!");
+            if (!idFound) {
+                System.out.println("Login failed! Invalid ID - No student found with this ID.");
+            } else {
+                System.out.println("Login failed! Incorrect password.");
+            }
             return;
         }
 
@@ -193,7 +201,9 @@ public class StudentControl {
                     String oldPw = sc.nextLine();
                     System.out.print("Enter new password: ");
                     String newPw = sc.nextLine();
-                    loggedIn.changePassword(oldPw, newPw);
+                    if (loggedIn.changePassword(oldPw, newPw)) {
+                        choice = 8; 
+                    }
                     break;
                     
                 case 8:

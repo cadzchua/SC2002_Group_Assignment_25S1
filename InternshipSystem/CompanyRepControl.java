@@ -77,19 +77,27 @@ public class CompanyRepControl {
         String pw = sc.nextLine();
 
         CompanyRepEntity loggedIn = null;
+        boolean idFound = false;
         for (int i = 0; i < repCount; i++) {
-            if (reps[i].login(id, pw)) {
-                if (!reps[i].isApproved()) {
-                    System.out.println("Your account is pending approval from Career Center Staff.");
-                    return;
+            if (reps[i].getId().equals(id)) {
+                idFound = true;
+                if (reps[i].login(id, pw)) {
+                    if (!reps[i].isApproved()) {
+                        System.out.println("Your account is pending approval from Career Center Staff.");
+                        return;
+                    }
+                    loggedIn = reps[i];
                 }
-                loggedIn = reps[i];
                 break;
             }
         }
 
         if (loggedIn == null) {
-            System.out.println("Login failed!");
+            if (!idFound) {
+                System.out.println("Login failed! Invalid ID - No company representative found with this ID.");
+            } else {
+                System.out.println("Login failed! Incorrect password.");
+            }
             return;
         }
 
@@ -104,8 +112,10 @@ public class CompanyRepControl {
             System.out.println("4. View Applications for Internship");
             System.out.println("5. Approve/Reject Application");
             System.out.println("6. Toggle Internship Visibility");
-            System.out.println("7. Change Password");
-            System.out.println("8. Logout");
+            System.out.println("7. Edit Internship");
+            System.out.println("8. Delete Internship");
+            System.out.println("9. Change Password");
+            System.out.println("10. Logout");
             System.out.print("Select option: ");
             choice = sc.nextInt();
             sc.nextLine();
@@ -371,21 +381,139 @@ public class CompanyRepControl {
                     break;
                     
                 case 7:
+                    InternshipEntity[] editInternships = loggedIn.getInternships();
+                    int editInternshipCount = loggedIn.getInternshipCount();
+                    
+                    if (editInternshipCount == 0) {
+                        System.out.println("You haven't created any internships yet.");
+                        break;
+                    }
+                    
+                    System.out.println("\n=== Your Internships ===");
+                    for (int i = 0; i < editInternshipCount; i++) {
+                        if (editInternships[i] != null) {
+                            System.out.println((i + 1) + ". " + editInternships[i].getTitle() + 
+                                             " (Status: " + editInternships[i].getStatus() + ")");
+                        }
+                    }
+                    System.out.print("Select internship number to edit (or 0 to cancel): ");
+                    int editChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (editChoice > 0 && editChoice <= editInternshipCount) {
+                        InternshipEntity toEdit = editInternships[editChoice - 1];
+                        if (toEdit.getStatus().equals("Approved")) {
+                            System.out.println("Cannot edit an approved internship. Changes are restricted after approval.");
+                            break;
+                        }
+                        
+                        System.out.println("\nEditing: " + toEdit.getTitle());
+                        System.out.println("Leave blank to keep current value.");
+                        
+                        System.out.print("New Description (current: " + toEdit.getDescription() + "): ");
+                        String newDesc = sc.nextLine();
+                        if (!newDesc.trim().isEmpty()) {
+                            loggedIn.editInternshipDescription(toEdit.getTitle(), newDesc);
+                        }
+                        
+                        System.out.print("New Slots (current: " + toEdit.getSlots() + ", 1-10): ");
+                        String newSlotsStr = sc.nextLine();
+                        if (!newSlotsStr.trim().isEmpty()) {
+                            try {
+                                int newSlots = Integer.parseInt(newSlotsStr);
+                                if (InputValidatorControl.isValidSlots(newSlots)) {
+                                    loggedIn.editInternshipSlots(toEdit.getTitle(), newSlots);
+                                } else {
+                                    System.out.println("Invalid slots. Must be between 1 and 10.");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Invalid number format.");
+                            }
+                        }
+                        
+                        System.out.println("Internship updated successfully.");
+                        
+                        int totalInternships = 0;
+                        for (InternshipEntity internship : internships) {
+                            if (internship != null) totalInternships++;
+                        }
+                        CSVReaderControl.updateInternshipCSV("sample_internship_list.csv", internships, totalInternships);
+                    } else if (editChoice != 0) {
+                        System.out.println("Invalid selection.");
+                    }
+                    break;
+                    
+                case 8:
+                    InternshipEntity[] delInternships = loggedIn.getInternships();
+                    int delInternshipCount = loggedIn.getInternshipCount();
+                    
+                    if (delInternshipCount == 0) {
+                        System.out.println("You haven't created any internships yet.");
+                        break;
+                    }
+                    
+                    System.out.println("\n=== Your Internships ===");
+                    for (int i = 0; i < delInternshipCount; i++) {
+                        if (delInternships[i] != null) {
+                            System.out.println((i + 1) + ". " + delInternships[i].getTitle() + 
+                                             " (Status: " + delInternships[i].getStatus() + ")");
+                        }
+                    }
+                    System.out.print("Select internship number to delete (or 0 to cancel): ");
+                    int delChoice = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (delChoice > 0 && delChoice <= delInternshipCount) {
+                        InternshipEntity toDelete = delInternships[delChoice - 1];
+                        System.out.print("Are you sure you want to delete '" + toDelete.getTitle() + "'? (Y/N): ");
+                        String confirm = sc.nextLine();
+                        if (confirm.equalsIgnoreCase("Y")) {
+                            String titleToDelete = toDelete.getTitle();
+                            loggedIn.deleteInternship(titleToDelete);
+
+                            for (int i = 0; i < internships.length; i++) {
+                                if (internships[i] != null && internships[i].getTitle().equals(titleToDelete)) {
+                                    for (int j = i; j < internships.length - 1; j++) {
+                                        internships[j] = internships[j + 1];
+                                    }
+                                    internships[internships.length - 1] = null;
+                                    break;
+                                }
+                            }
+                            
+                            int totalInternships = 0;
+                            for (InternshipEntity internship : internships) {
+                                if (internship != null) totalInternships++;
+                            }
+                            CSVReaderControl.updateInternshipCSV("sample_internship_list.csv", internships, totalInternships);
+                            
+                            System.out.println("Internship deleted successfully.");
+                        } else {
+                            System.out.println("Deletion cancelled.");
+                        }
+                    } else if (delChoice != 0) {
+                        System.out.println("Invalid selection.");
+                    }
+                    break;
+                    
+                case 9:
                     System.out.print("Enter old password: ");
                     String oldPw = sc.nextLine();
                     System.out.print("Enter new password: ");
                     String newPw = sc.nextLine();
-                    loggedIn.changePassword(oldPw, newPw);
+                    if (loggedIn.changePassword(oldPw, newPw)) {
+                        choice = 10; 
+                    }
                     break;
                     
-                case 8:
+                case 10:
                     loggedIn.logout();
                     break;
                     
                 default:
                     System.out.println("Invalid choice!");
             }
-        } while (choice != 8);
+        } while (choice != 10);
     }
 
     public CompanyRepEntity[] getReps() {

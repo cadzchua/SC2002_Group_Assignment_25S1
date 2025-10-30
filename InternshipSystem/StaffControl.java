@@ -30,15 +30,23 @@ public class StaffControl {
         String pw = sc.nextLine();
 
         CareerCentreStaffEntity loggedIn = null;
+        boolean idFound = false;
         for (int i = 0; i < staffCount; i++) {
-            if (staffList[i].login(id, pw)) {
-                loggedIn = staffList[i];
+            if (staffList[i].getId().equals(id)) {
+                idFound = true;
+                if (staffList[i].login(id, pw)) {
+                    loggedIn = staffList[i];
+                }
                 break;
             }
         }
 
         if (loggedIn == null) {
-            System.out.println("Login failed!");
+            if (!idFound) {
+                System.out.println("Login failed! Invalid ID - No staff member found with this ID.");
+            } else {
+                System.out.println("Login failed! Incorrect password.");
+            }
             return;
         }
 
@@ -124,7 +132,7 @@ public class StaffControl {
                                     System.out.print("  Approve this withdrawal? (Y/N): ");
                                     String ans = sc.nextLine();
                                     if (ans.equalsIgnoreCase("Y")) {
-                                        loggedIn.approveWithdrawal(students[i], withdrawals[j]);
+                                        loggedIn.approveWithdrawalWithSlotRelease(students[i], withdrawals[j], internships);
                                     } else {
                                         loggedIn.rejectWithdrawal(students[i], withdrawals[j]);
                                     }
@@ -190,7 +198,9 @@ public class StaffControl {
                     String oldPw = sc.nextLine();
                     System.out.print("Enter new password: ");
                     String newPw = sc.nextLine();
-                    loggedIn.changePassword(oldPw, newPw);
+                    if (loggedIn.changePassword(oldPw, newPw)) {
+                        choice = 7; 
+                    }
                     break;
                     
                 case 7:

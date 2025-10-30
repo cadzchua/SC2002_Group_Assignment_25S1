@@ -22,12 +22,15 @@ public class UserEntity {
         System.out.println("Logged out successfully!");
     }
 
-    public void changePassword(String oldPw, String newPw) {
+    public boolean changePassword(String oldPw, String newPw) {
         if (password.equals(oldPw)) {
             password = newPw;
             System.out.println("Password changed successfully!");
+            System.out.println("Please log in again with your new password.");
+            return true;
         } else {
             System.out.println("Incorrect old password!");
+            return false;
         }
     }
 
