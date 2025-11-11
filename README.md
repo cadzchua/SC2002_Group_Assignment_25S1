@@ -25,7 +25,7 @@ This application streamlines the entire internship placement process:
 1. **Navigate to the project directory:**
 
    ```cmd
-   cd "c:\Users\cadid\Desktop\NTU CS\Y2S1\SC2002 Object Oriented Design & Programming\SC2002_Group_Assignment_25S1"
+   cd SC2002_Group_Assignment_25S1"
    ```
 
 2. **Compile all Java files:**
