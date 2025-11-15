@@ -1,34 +1,63 @@
 package InternshipSystem;
 
 
+/**
+ * Represents a student in the internship placement system.
+ * Extends the UserEntity class to include student-specific attributes and behaviors.
+ */
 public class StudentEntity extends UserEntity {
+    /**
+     * The major of the student.
+     */
     private String major;
-    private int year;
-    private String[] appliedInternships = new String[3];
-    private String[] applicationStatus = new String[3];
-    private int appCount = 0;
-    private String acceptedInternship = null;
-    private String[] withdrawalRequests = new String[3];
-    private int withdrawalCount = 0;
 
+    /**
+     * The year of study of the student.
+     */
+    private int year;
+
+    /**
+     * Constructs a StudentEntity with the specified details.
+     * @param id The unique identifier for the student.
+     * @param name The name of the student.
+     * @param major The major of the student.
+     * @param year The year of study of the student.
+     * @param email The email address of the student.
+     */
     public StudentEntity(String id, String name, String major, int year, String email) {
         super(id, name, email);
         this.major = major;
         this.year = year;
     }
 
+    /**
+     * Gets the major of the student.
+     * @return The major of the student.
+     */
     public String getMajor() {
         return major;
     }
 
+    /**
+     * Gets the year of study of the student.
+     * @return The year of study of the student.
+     */
     public int getYear() {
         return year;
     }
 
+    /**
+     * Checks if the student is eligible to apply for more internships.
+     * @return true if the student can apply for more internships, false otherwise.
+     */
     public boolean canApply() {
         return appCount < 3 && acceptedInternship == null;
     }
 
+    /**
+     * Applies for an internship if the student meets the eligibility criteria.
+     * @param internship The internship to apply for.
+     */
     public void applyInternship(InternshipEntity internship) {
         if (appCount >= 3) {
             System.out.println("You can only apply for 3 internships at once.");
@@ -62,6 +91,9 @@ public class StudentEntity extends UserEntity {
         System.out.println("Applied to: " + internship.getTitle());
     }
 
+    /**
+     * Views the internships that the student has applied for, along with their application statuses.
+     */
     public void viewApplications() {
         System.out.println("\n=== Your Internship Applications ===");
         if (appCount == 0) {
@@ -73,6 +105,11 @@ public class StudentEntity extends UserEntity {
         }
     }
 
+    /**
+     * Updates the status of a specific internship application.
+     * @param internshipTitle The title of the internship.
+     * @param status The new status of the application.
+     */
     public void updateApplicationStatus(String internshipTitle, String status) {
         for (int i = 0; i < appCount; i++) {
             if (appliedInternships[i].equals(internshipTitle)) {
@@ -83,6 +120,10 @@ public class StudentEntity extends UserEntity {
         }
     }
 
+    /**
+     * Accepts an internship placement if the application status is 'Successful'.
+     * @param internshipTitle The title of the accepted internship.
+     */
     public void acceptPlacement(String internshipTitle) {
         for (int i = 0; i < appCount; i++) {
             if (appliedInternships[i].equals(internshipTitle) && applicationStatus[i].equals("Successful")) {
@@ -100,6 +141,10 @@ public class StudentEntity extends UserEntity {
         System.out.println("Cannot accept this placement. Application must be 'Successful'.");
     }
 
+    /**
+     * Requests to withdraw from an internship application or accepted placement.
+     * @param internshipTitle The title of the internship to withdraw from.
+     */
     public void requestWithdrawal(String internshipTitle) {
         boolean found = false;
         for (int i = 0; i < appCount; i++) {
@@ -130,14 +175,26 @@ public class StudentEntity extends UserEntity {
         }
     }
 
+    /**
+     * Gets the list of withdrawal requests made by the student.
+     * @return An array of withdrawal request titles.
+     */
     public String[] getWithdrawalRequests() {
         return withdrawalRequests;
     }
 
+    /**
+     * Gets the count of withdrawal requests made by the student.
+     * @return The number of withdrawal requests.
+     */
     public int getWithdrawalCount() {
         return withdrawalCount;
     }
 
+    /**
+     * Approves a withdrawal request for an internship.
+     * @param internshipTitle The title of the internship to withdraw from.
+     */
     public void approveWithdrawal(String internshipTitle) {
         if (acceptedInternship != null && acceptedInternship.equals(internshipTitle)) {
             acceptedInternship = null;
@@ -159,24 +216,45 @@ public class StudentEntity extends UserEntity {
         }
     }
 
+    /**
+     * Releases a slot for an internship, making it available for other applicants.
+     * @param internship The internship for which to release the slot.
+     */
     public void releaseSlotForInternship(InternshipEntity internship) {
         if (internship != null && internship.getFilledSlots() > 0) {
             internship.releaseSlot();
         }
     }
 
+    /**
+     * Gets the titles of internships that the student has applied for.
+     * @return An array of applied internship titles.
+     */
     public String[] getAppliedInternships() {
         return appliedInternships;
     }
 
+    /**
+     * Gets the application statuses of the internships the student has applied for.
+     * @return An array of application statuses.
+     */
     public String[] getApplicationStatus() {
         return applicationStatus;
     }
 
+    /**
+     * Gets the count of internships the student has applied for.
+     * @return The number of applications.
+     */
     public int getAppCount() {
         return appCount;
     }
 
+    /**
+     * Gets the title of an application by its index.
+     * @param index The index of the application.
+     * @return The title of the application, or null if the index is invalid.
+     */
     public String getApplicationTitle(int index) {
         if (index >= 0 && index < appCount) {
             return appliedInternships[index];
@@ -184,10 +262,17 @@ public class StudentEntity extends UserEntity {
         return null;
     }
 
+    /**
+     * Gets the internship that the student has accepted.
+     * @return The title of the accepted internship, or null if none accepted.
+     */
     public String getAcceptedInternship() {
         return acceptedInternship;
     }
 
+    /**
+     * Displays the student's information, including user details, major, year, and accepted internship.
+     */
     public void showInfo() {
         super.showInfo();
         System.out.println("Major: " + major);

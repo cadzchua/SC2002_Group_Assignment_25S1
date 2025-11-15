@@ -2,18 +2,42 @@ package InternshipSystem;
 
 import java.util.Scanner;
 
+/**
+ * Handles the operations related to students in the internship placement system.
+ */
 public class StudentControl {
 
+    /**
+     * Array of students managed by this control.
+     */
     private StudentEntity[] students;
+
+    /**
+     * Array of internships available in the system.
+     */
     private InternshipEntity[] internships;
+
+    /**
+     * The total number of students.
+     */
     private int studentCount;
 
+    /**
+     * Constructs a StudentControl with the specified students and internships.
+     * @param students The array of students.
+     * @param studentCount The total number of students.
+     * @param internships The array of internships.
+     */
     public StudentControl(StudentEntity[] students, int studentCount, InternshipEntity[] internships) {
         this.students = students;
         this.studentCount = studentCount;
         this.internships = internships;
     }
 
+    /**
+     * Displays the student command-line interface for interaction.
+     * @param sc The scanner object for user input.
+     */
     public void showStudentCLI(Scanner sc) {
         System.out.print("Enter Student ID: ");
         String id = sc.nextLine();

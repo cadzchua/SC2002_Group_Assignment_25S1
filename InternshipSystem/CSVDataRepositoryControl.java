@@ -2,8 +2,19 @@ package InternshipSystem;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * Implements the DataRepositoryControl interface for CSV file operations.
+ * Provides methods to read, append, and update data in CSV files.
+ */
 public class CSVDataRepositoryControl implements DataRepositoryControl {
-    
+
+    /**
+     * Reads data from a CSV file and returns it as a 2D array.
+     * @param filename The name of the CSV file to read from.
+     * @param maxRows The maximum number of rows to read.
+     * @param maxCols The maximum number of columns to read.
+     * @return A 2D array containing the data read from the CSV file.
+     */
     @Override
     public String[][] readData(String filename, int maxRows, int maxCols) {
         String[][] data = new String[maxRows][maxCols];
@@ -26,6 +37,11 @@ public class CSVDataRepositoryControl implements DataRepositoryControl {
         return data;
     }
 
+    /**
+     * Appends a line of data to a CSV file.
+     * @param filename The name of the CSV file to append to.
+     * @param line The line of data to append.
+     */
     @Override
     public void appendData(String filename, String line) {
         try {
@@ -37,6 +53,12 @@ public class CSVDataRepositoryControl implements DataRepositoryControl {
         }
     }
 
+    /**
+     * Updates the company representative data in a CSV file.
+     * @param filename The name of the CSV file to update.
+     * @param reps The array of company representatives.
+     * @param repCount The number of company representatives.
+     */
     public void updateCompanyRepData(String filename, CompanyRepEntity[] reps, int repCount) {
         try {
             FileWriter fw = new FileWriter(filename, false);
@@ -60,6 +82,12 @@ public class CSVDataRepositoryControl implements DataRepositoryControl {
         }
     }
 
+    /**
+     * Updates the internship data in a CSV file.
+     * @param filename The name of the CSV file to update.
+     * @param internships The array of internships.
+     * @param internshipCount The number of internships.
+     */
     public void updateInternshipData(String filename, InternshipEntity[] internships, int internshipCount) {
         try {
             FileWriter fw = new FileWriter(filename, false);
