@@ -25,7 +25,7 @@ This application streamlines the entire internship placement process:
 1. **Navigate to the project directory:**
 
    ```cmd
-   cd SC2002_Group_Assignment_25S1"
+   cd SC2002_Group_Assignment_25S1
    ```
 
 2. **Compile all Java files:**
