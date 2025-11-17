@@ -1,3 +1,4 @@
+package InternshipSystem;
 /**
  * Interface for data repository operations.
  * Provides methods to read and append data to a file.

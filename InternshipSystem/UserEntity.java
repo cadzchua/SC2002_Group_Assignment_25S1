@@ -1,3 +1,4 @@
+package InternshipSystem;
 /**
  * Represents a generic user in the system.
  * This class serves as a base class for specific user types like students and staff.
