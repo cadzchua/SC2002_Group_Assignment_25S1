@@ -1,3 +1,4 @@
 Title,Description,Level,PreferredMajor,OpeningDate,ClosingDate,Status,CompanyName,CompanyRep,Slots,Visible
 Data Analyst for Microsoft,Need a data analyst,Advanced,Computer Science,2025-10-26,2025-11-19,Approved,Microsoft,john,5,true
-Software,lmao,Basic,Computer Science,2025-10-26,2025-11-10,Pending,Microsoft,john,10,true
+Software,lmao,Basic,Computer Science,2025-10-26,2025-11-10,Approved,Microsoft,john,10,true
+Software Engineering Intern,Full-stack development with React and Spring Boot,Advanced,Computer Science,2025-01-12,2026-01-31,Approved,Tech Solutions Pte Ltd,Sarah Chen,3,true

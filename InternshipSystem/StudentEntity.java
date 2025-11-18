@@ -17,6 +17,36 @@ public class StudentEntity extends UserEntity {
     private int year;
 
     /**
+     * Array to store the titles of internships the student has applied for.
+     */
+    private String[] appliedInternships = new String[3];
+
+    /**
+     * Array to store the application statuses for the internships.
+     */
+    private String[] applicationStatus = new String[3];
+
+    /**
+     * The count of internships the student has applied for.
+     */
+    private int appCount = 0;
+
+    /**
+     * The title of the accepted internship placement.
+     */
+    private String acceptedInternship = null;
+
+    /**
+     * Array to store withdrawal requests made by the student.
+     */
+    private String[] withdrawalRequests = new String[3];
+
+    /**
+     * The count of withdrawal requests made by the student.
+     */
+    private int withdrawalCount = 0;
+
+    /**
      * Constructs a StudentEntity with the specified details.
      * @param id The unique identifier for the student.
      * @param name The name of the student.
